@@ -1,36 +1,34 @@
-import { useState, useReducer } from "react";
+import { useReducer, useState } from 'react';
 
 const reducer = (state, action) => {
-  console.log("state", state);
-  console.log("action", action);
-  if (action.payload === "add") {
-    return { todos: [action.newTodo, ...state.todos] };
+  if (action.type === 'add') {
+    state = { todos: [action.payload, ...state.todos] };
   }
-  return { todos: state.todos };
+  return state;
 };
 
 const Todo = () => {
-  const [newTodo, setNewTodo] = useState();
-
+  const [newTodo, setNewTodo] = useState('');
   const [state, dispatch] = useReducer(reducer, { todos: [] });
+
+  console.log('state', state);
 
   return (
     <div>
-      <form>
-        <input type="text" onChange={(ev) => setNewTodo(ev.target.value)} />
-        <button
-          onClick={(ev) => {
-            ev.preventDefault();
-            dispatch({ payload: "add", newTodo });
-          }}
-          type="submit"
-        >
-          add
-        </button>
-      </form>
-      {state.todos.map((item, index) => {
-        return <div key={index}>{item}</div>;
-      })}
+      <input type="text" onChange={(ev) => setNewTodo(ev.target.value)} />
+      <button
+        onClick={() => {
+          dispatch({ type: 'add', payload: newTodo });
+        }}
+      >
+        submit
+      </button>
+
+      <br />
+
+      {state.todos.map((todoItem, index) => (
+        <div key={index}>{todoItem}</div>
+      ))}
     </div>
   );
 };
